@@ -6,7 +6,8 @@
             templateBooks: '#template-book'
         },
         containerOf: {
-            booksList: 'books-list'
+            booksList: '.books-list',
+            bookImage: '.book_image'
         },
     };
 
@@ -14,23 +15,75 @@
         books: Handlebars.compile(document.querySelector(select.templateOf.templateBooks).innerHTML),
     };
 
-    getElements(); {
-        const thisBooksList = this;
-        thisBooksList.booksContainer = document.querySelector(select.containerOf.booksList)
+    // favoriteBooks = [];
 
-    }
+    /*function getElements() {
+    const thisBooksList = this;
+    thisBooksList.booksContainer = document.querySelector(select.containerOf.booksList);
+  
+    }*/
 
-    render(); {
-        const thisBooksList = this;
-        for (let book in dataSource.books) {
-            const generatedHtml = templates.books(book)
+    function render() {
+        //const thisBooksList = this;
+        for (let book of dataSource.books) {
+            const generatedHtml = templates.books(book);
             const generatedDom = utils.createDOMFromHTML(generatedHtml);
+            const booksContainer = document.querySelector(select.containerOf.booksList);
             booksContainer.appendChild(generatedDom);
 
         }
     }
+   /* const favoriteBooks = [];
 
-    thisBooksList.render();
-    thisBooksList.getElements();
+    function initActions() {
+        const booksImage = document.querySelector(select.containerOf.bookImage);
+        for (let image of booksImage) {
+            addEventListener('dblclick', function (event) {
+                event.preventDefault;
+                image.classList.add('favorite');
+                bookId = image.getAttribute('data-id');
+                favoriteBooks.push(bookId);
 
+
+
+
+            })
+        }
+
+
+    }*/
+
+
+    const favoriteBooks = [];
+
+    
+    function initActions() {
+      
+      const bookImages = document.querySelectorAll(select.containerOf.bookImage);
+    
+     
+      bookImages.forEach((bookImage) => {
+        
+        bookImage.addEventListener('dblclick', (event) => {
+          
+          event.preventDefault();
+          
+          
+          bookImage.classList.add('favorite');
+          
+          
+          const bookId = bookImage.getAttribute('data-id');
+          
+          
+          favoriteBooks.push(bookId);
+        });
+      });
+    }
+
+    render();
+    initActions();
+    //getElements();
 }
+
+
+
