@@ -7,7 +7,8 @@
     },
     containerOf: {
       booksList: '.books-list',
-      bookImage: '.book__image'
+      bookImage: '.book__image',
+      bookFilters: '.filters'
     },
   };
 
@@ -35,50 +36,65 @@
     }
   }
   const favoriteBooks = [];
+  const filters = [];
 
   function initActions() {
+    const booksList = document.querySelector(select.containerOf.booksList);
     const booksImage = document.querySelectorAll(select.containerOf.bookImage);
+    const bookFilters = document.querySelector(select.containerOf.bookFilters);
     console.log(booksImage);
     for (let image in booksImage) {
-        const bookImage = booksImage[image]
-        console.log(bookImage);
-        const bookId = bookImage.getAttribute('data-id');
-        console.log(bookId);
-        if(!favoriteBooks.includes[bookId]){
-       bookImage.addEventListener('dblclick', function (event) {
-        event.preventDefault;
-        bookImage.classList.add('favorite');
-        favoriteBooks.push(bookId);
-        console.log(favoriteBooks);
-       }
-       )} else if (bookList.favoriteBooks.includes[bookId]){
-        const indexOfbook = favoriteBooks.indexOf(bookId);
-        favoriteBooks.splice(indexOfbook,1);
-        bookImage.classList.remove('favorite');
-        
-    
-       }
-    
-       
+      const bookImage = booksImage[image];
+      console.log(bookImage);
+      const bookId = bookImage.getAttribute('data-id');
+      console.log(bookId);
+      
+      //Metoda event delegation tworzymy event.target, który jest klikanym elementem
+      booksList.addEventListener('dblclick', function (event) {
+        event.preventDefault();
+        const target = event.target;
+        const targetBook = (target.closest('.book__image'));
+        console.log(target);
+        console.log(targetBook);
+        if(targetBook){
+          
+          if(!favoriteBooks.includes(bookId)){
+          targetBook.classList.add('favorite');
+          favoriteBooks.push(bookId);
+        } else {
+          const indexOfBook = favoriteBooks.indexOf(bookId);
+          if(indexOfBook !== -1){
+            favoriteBooks.splice(indexOfBook, 1);
+          }
+          //bookImage.classList.remove('favorite');
+          targetBook.classList.remove('favorite');
+        }
+      }
+          console.log(favoriteBooks);
+      }
+      );}
+      bookFilters.addEventListener('click', function(event){
+        const targetFilter = event.target;
+        console.log(targetFilter);
+        const checked = targetFilter.checked;
+        console.log(checked);
+        if(targetFilter.tagName == 'INPUT' && targetFilter.type == 'checkbox' && targetFilter.name == 'filter'){
+          if(checked){
+            filters.push(targetFilter.value);
+          }
+        }
+        console.log(filters);
+      })
 
-    
-        
-       }
-    }
 
-       
-
-
-
-
-  
-    
+  }
 
 
 
   render();
   initActions();
-  //getElements();
+ 
+
 
 
 
