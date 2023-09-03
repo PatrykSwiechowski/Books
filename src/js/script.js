@@ -16,19 +16,34 @@
     books: Handlebars.compile(document.querySelector(select.templateOf.templateBooks).innerHTML),
   };
 
-  // favoriteBooks = [];
 
-  /*function getElements() {
+    class BooksList{
+      constructor(){
+        const thisBooksList = this;
+        thisBooksList.render();
+        thisBooksList.getElements();
+        thisBooksList.initActions();
+
+      }
+
+      initData(){
+        this.data = dataSource.books;
+      }
+
+      getElements(){
+        const thisBooksList = this;
+        thisBooksList.container = document.querySelector(select.containerOf.booksList);
+        thisBooksList.bookFilters = document.querySelector(select.containerOf.bookFilters); 
+      }
+    
+
+     render() {
     const thisBooksList = this;
-    thisBooksList.booksContainer = document.querySelector(select.containerOf.booksList);
-  
-    }*/
-
-  function render() {
-    //const thisBooksList = this;
     for (let book of dataSource.books) {
-      const ratingBgc = determineRatingBgc(book.rating)
+      const ratingBgc = thisBooksList.determineRatingBgc(book.rating);
       const ratingWidth = ((book.rating / 10) * 100);
+      book.ratingBgc = ratingBgc;
+      book.ratingWidth = ratingWidth;
       const generatedHtml = templates.books(book);
       const generatedDom = utils.createDOMFromHTML(generatedHtml);
       const booksContainer = document.querySelector(select.containerOf.booksList);
@@ -37,11 +52,11 @@
 
     }
   }
-  const favoriteBooks = [];
-  const filters = [];
 
-  function initActions() {
-    const booksList = document.querySelector(select.containerOf.booksList);
+     initActions() {
+      const thisBooksList = this;
+      const favoriteBooks = [];
+      const filters = [];
     const booksImage = document.querySelectorAll(select.containerOf.bookImage);
     const bookFilters = document.querySelector(select.containerOf.bookFilters);
     console.log(booksImage);
@@ -51,7 +66,7 @@
     
     
       //Metoda event delegation tworzymy event.target, który jest klikanym elementem
-      booksList.addEventListener('dblclick', function (event) {
+      thisBooksList.container.addEventListener('dblclick', function (event) {
         event.preventDefault();
         const target = event.target;
         const targetBook = (target.closest('.book__image'));
@@ -73,13 +88,13 @@
         }
         console.log(favoriteBooks);
       });
-      booksList.addEventListener('click', function (event){
+      thisBooksList.container.addEventListener('click', function (event){
         event.preventDefault();
       });
     
   
   
-      bookFilters.addEventListener('click', function(event){
+      thisBooksList.bookFilters.addEventListener('click', function(event){
         const targetFilter = event.target;
         const checked = targetFilter.checked;
         console.log(checked);
@@ -98,12 +113,12 @@
           }
         }
         console.log(filters);
-        filtersBook();
+        thisBooksList.filtersBook();
       });
     }
   }
 
-  function filtersBook(){
+     filtersBook(){
     for(let book of dataSource.books){
       const selectedBook = document.querySelector('.book__image[data-id ="' + book.id + '"]');
       let hidden = false;
@@ -122,31 +137,22 @@
     }
   }
 
-  function determineRatingBgc(rating){
+     determineRatingBgc(rating){
     if(rating < 6){
-      return 'background: linear-gradient(to bottom,  #fefcea 0%, #f1da36 100%)';
+      return 'linear-gradient(to bottom,  #fefcea 0%, #f1da36 100%)';
     }else if(rating > 6 && rating <=8){
-      return 'background: linear-gradient(to bottom, #b4df5b 0%,#b4df5b 100%)';
+      return 'linear-gradient(to bottom, #b4df5b 0%,#b4df5b 100%)';
     }else if(rating > 8 && rating <= 9){
-      return 'background: linear-gradient(to bottom, #299a0b 0%, #299a0b 100%)';
+      return 'linear-gradient(to bottom, #299a0b 0%, #299a0b 100%)';
     }else if(rating > 9){
-      return 'background: linear-gradient(to bottom, #ff0084 0%,#ff0084 100%)';
+      return 'linear-gradient(to bottom, #ff0084 0%,#ff0084 100%)';
     }
     
   }
+}
   
-  
-
-
-
-
-  render();
-  initActions();
- 
-
-
-
-
+const app = new BooksList();
+console.log(app);
 
 
 }
