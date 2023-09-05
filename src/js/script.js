@@ -11,7 +11,7 @@
       bookFilters: '.filters'
     },
   };
-
+  //const filters = [];
   const templates = {
     books: Handlebars.compile(document.querySelector(select.templateOf.templateBooks).innerHTML),
   };
@@ -37,7 +37,6 @@
       thisBooksList.bookFilters = document.querySelector(select.containerOf.bookFilters); 
     }
     
-
     render() {
       const thisBooksList = this;
       for (let book of dataSource.books) {
@@ -53,25 +52,31 @@
 
       }
     }
-
+   
     initActions() {
-      const thisBooksList = this;
+      const filters = [];
       const favoriteBooks = [];
-      const booksImage = document.querySelectorAll(select.containerOf.bookImage);
+      const thisBooksList = this;
+      //const favoriteBooks = [];
+      //const booksImage = document.querySelectorAll(select.containerOf.bookImage);
       //const bookFilters = document.querySelector(select.containerOf.bookFilters);
-      console.log(booksImage);
-      for (let bookImage of booksImage) {
-        const bookId = bookImage.getAttribute('data-id');
-        console.log(bookId);
+      //console.log(booksImage);
+      //for (let bookImage of booksImage) {
+        //const bookId = bookImage.getAttribute('data-id');
+       // console.log(bookId);
+      
     
     
         //Metoda event delegation tworzymy event.target, który jest klikanym elementem
         thisBooksList.container.addEventListener('dblclick', function (event) {
           event.preventDefault();
           const target = event.target;
+          const bookId = target.offsetParent.getAttribute('data-id')
           const targetBook = (target.closest('.book__image'));
           console.log(target);
+          console.log(bookId);
           console.log(targetBook);
+          
           if(targetBook){
           
             if(!favoriteBooks.includes(bookId)){
@@ -86,14 +91,22 @@
               targetBook.classList.remove('favorite');
             }
           }
+        
           console.log(favoriteBooks);
-        });
-        thisBooksList.container.addEventListener('click', function (event){
+      });
+      //console.log(favoriteBooks);
+        /*thisBooksList.container.addEventListener('click', function (event){
           event.preventDefault();
-        });
+        });*/
+      //}
+      //console.log(favoriteBooks);
+      thisBooksList.container.addEventListener('click', function (event){
+        event.preventDefault();
+      });
+      
     
   
-  
+      
         thisBooksList.bookFilters.addEventListener('click', function(event){
           const targetFilter = event.target;
           const checked = targetFilter.checked;
@@ -115,9 +128,9 @@
           console.log(filters);
           thisBooksList.filtersBook();
         });
-      }
+      
     }
-
+      
     filtersBook(){
       for(let book of dataSource.books){
         const selectedBook = document.querySelector('.book__image[data-id ="' + book.id + '"]');
