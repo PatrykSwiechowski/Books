@@ -11,16 +11,17 @@
       bookFilters: '.filters'
     },
   };
-  //const filters = [];
   const templates = {
     books: Handlebars.compile(document.querySelector(select.templateOf.templateBooks).innerHTML),
   };
 
-  const filters = [];
+  
 
   class BooksList{
     constructor(){
       const thisBooksList = this;
+      thisBooksList.filters = [];
+      thisBooksList.favoriteBooks = [];
       thisBooksList.render();
       thisBooksList.getElements();
       thisBooksList.initActions();
@@ -54,48 +55,46 @@
     }
    
     initActions() {
-      const filters = [];
-      const favoriteBooks = [];
       const thisBooksList = this;
       //const favoriteBooks = [];
       //const booksImage = document.querySelectorAll(select.containerOf.bookImage);
       //const bookFilters = document.querySelector(select.containerOf.bookFilters);
       //console.log(booksImage);
       //for (let bookImage of booksImage) {
-        //const bookId = bookImage.getAttribute('data-id');
-       // console.log(bookId);
+      //const bookId = bookImage.getAttribute('data-id');
+      // console.log(bookId);
       
     
     
-        //Metoda event delegation tworzymy event.target, który jest klikanym elementem
-        thisBooksList.container.addEventListener('dblclick', function (event) {
-          event.preventDefault();
-          const target = event.target;
-          const bookId = target.offsetParent.getAttribute('data-id')
-          const targetBook = (target.closest('.book__image'));
-          console.log(target);
-          console.log(bookId);
-          console.log(targetBook);
+      //Metoda event delegation tworzymy event.target, który jest klikanym elementem
+      thisBooksList.container.addEventListener('dblclick', function (event) {
+        event.preventDefault();
+        const target = event.target;
+        const bookId = target.offsetParent.getAttribute('data-id');
+        const targetBook = (target.closest('.book__image'));
+        console.log(target);
+        console.log(bookId);
+        console.log(targetBook);
+
+        if(targetBook){
           
-          if(targetBook){
-          
-            if(!favoriteBooks.includes(bookId)){
-              targetBook.classList.add('favorite');
-              favoriteBooks.push(bookId);
-            } else {
-              const indexOfBook = favoriteBooks.indexOf(bookId);
-              if(indexOfBook !== -1){ 
-                favoriteBooks.splice(indexOfBook, 1);
-              }
-              //bookImage.classList.remove('favorite');
-              targetBook.classList.remove('favorite');
+          if(!thisBooksList.favoriteBooks.includes(bookId)){
+            targetBook.classList.add('favorite');
+            thisBooksList.favoriteBooks.push(bookId);
+          } else {
+            const indexOfBook = thisBooksList.favoriteBooks.indexOf(bookId);
+            if(indexOfBook !== -1){ 
+              thisBooksList.favoriteBooks.splice(indexOfBook, 1);
             }
+            //bookImage.classList.remove('favorite');
+            targetBook.classList.remove('favorite');
           }
+        }
         
-          console.log(favoriteBooks);
+        console.log(thisBooksList.favoriteBooks);
       });
       //console.log(favoriteBooks);
-        /*thisBooksList.container.addEventListener('click', function (event){
+      /*thisBooksList.container.addEventListener('click', function (event){
           event.preventDefault();
         });*/
       //}
@@ -107,35 +106,37 @@
     
   
       
-        thisBooksList.bookFilters.addEventListener('click', function(event){
-          const targetFilter = event.target;
-          const checked = targetFilter.checked;
-          console.log(checked);
-          if(targetFilter.tagName === 'INPUT' && targetFilter.type === 'checkbox' && targetFilter.name === 'filter'){
-            const filterValue = targetFilter.value;
-            console.log(filterValue);
-            if(checked){
-              if(!filters.includes(filterValue)){
-                filters.push(filterValue);
-              }
-            } else{
-              const indexOfFilter = filters.indexOf(filterValue);
-              if(indexOfFilter !== -1){
-                filters.splice(indexOfFilter, 1);
-              }
+      thisBooksList.bookFilters.addEventListener('click', function(event){
+        const targetFilter = event.target;
+        console.log(targetFilter);
+        const checked = targetFilter.checked;
+        console.log(checked);
+        if(targetFilter.tagName === 'INPUT' && targetFilter.type === 'checkbox' && targetFilter.name === 'filter'){
+          const filterValue = targetFilter.value;
+          console.log(filterValue);
+          if(checked){
+            if(!thisBooksList.filters.includes(filterValue)){
+              thisBooksList.filters.push(filterValue);
+            }
+          } else{
+            const indexOfFilter = thisBooksList.filters.indexOf(filterValue);
+            if(indexOfFilter !== -1){
+              thisBooksList.filters.splice(indexOfFilter, 1);
             }
           }
-          console.log(filters);
-          thisBooksList.filtersBook();
-        });
+        }
+        console.log(thisBooksList.filters);
+        thisBooksList.filtersBook();
+      });
       
     }
       
     filtersBook(){
+      const thisBooksList = this;
       for(let book of dataSource.books){
         const selectedBook = document.querySelector('.book__image[data-id ="' + book.id + '"]');
         let hidden = false;
-        for(let filter of filters){
+        for(let filter of thisBooksList.filters){
           if(!book.details[filter]){
             hidden = true;
             break;
